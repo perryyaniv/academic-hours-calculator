@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { CalculationResult, CourseSettings } from '../types';
 import { solveLastSession, formatHours } from '../utils/calculations';
+import { NumberInput } from './NumberInput';
 
 interface Props {
   results: CalculationResult;
@@ -199,13 +200,11 @@ export function ResultsPanel({ results, settings }: Props) {
             </div>
             <div>
               <label className="label">הפסקה (דקות)</label>
-              <input
-                type="number"
-                className="input"
+              <NumberInput
                 value={solverBreak}
                 min={0}
                 step={5}
-                onChange={(e) => setSolverBreak(parseInt(e.target.value, 10) || 0)}
+                onChange={(v) => setSolverBreak(Math.round(v))}
               />
             </div>
           </div>

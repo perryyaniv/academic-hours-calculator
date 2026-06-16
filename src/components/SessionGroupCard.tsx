@@ -1,5 +1,6 @@
 import type { SessionGroup, CourseSettings } from '../types';
 import { timeToMinutes, computeBreak } from '../utils/calculations';
+import { NumberInput } from './NumberInput';
 
 interface Props {
   group: SessionGroup;
@@ -83,26 +84,23 @@ export function SessionGroupCard({ group, index, settings, onChange, onRemove }:
 
         <div>
           <label className="label">מספר מפגשים</label>
-          <input
-            type="number"
-            className="input bg-white"
+          <NumberInput
             value={group.count}
             min={1}
-            onChange={(e) => onChange({ ...group, count: parseInt(e.target.value, 10) || 1 })}
+            step={1}
+            onChange={(v) => onChange({ ...group, count: Math.round(v) })}
           />
         </div>
 
         <div>
           <label className="label">שעות אקדמיות</label>
-          <input
-            type="number"
-            className={`input bg-white font-semibold ${
-              exceedsMax ? 'border-red-400 text-red-700' : 'text-bb-green'
-            }`}
+          <NumberInput
             value={group.hoursPerSession}
             min={0.5}
+            max={settings.maxHoursPerDay}
             step={0.5}
-            onChange={(e) => onChange({ ...group, hoursPerSession: parseFloat(e.target.value) || 0 })}
+            onChange={(v) => onChange({ ...group, hoursPerSession: v })}
+            inputClassName={exceedsMax ? 'text-red-700' : 'text-bb-green'}
           />
           <p className="text-xs text-gray-400 mt-1">מקס׳ {settings.maxHoursPerDay} ביום</p>
         </div>

@@ -1,4 +1,5 @@
 import type { CourseSettings } from '../types';
+import { NumberInput } from './NumberInput';
 
 interface Props {
   settings: CourseSettings;
@@ -21,44 +22,34 @@ export function CourseSettingsCard({ settings, onChange }: Props) {
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
         <div>
           <label className="label">סה״כ שעות אקדמיות</label>
-          <input
-            type="number"
-            className="input text-lg font-bold text-bb-green"
+          <NumberInput
             value={settings.totalHours}
             min={1}
-            step={0.5}
-            onChange={(e) =>
-              set({ totalHours: parseFloat(e.target.value) || 0 })
-            }
+            step={1}
+            onChange={(v) => set({ totalHours: v })}
+            inputClassName="text-lg font-bold text-bb-green"
           />
         </div>
 
         <div>
           <label className="label">שעה אקדמית = כמה דקות?</label>
-          <input
-            type="number"
-            className="input"
+          <NumberInput
             value={settings.academicHourMinutes}
             min={1}
             max={120}
-            onChange={(e) =>
-              set({ academicHourMinutes: parseInt(e.target.value, 10) || 60 })
-            }
+            step={1}
+            onChange={(v) => set({ academicHourMinutes: v })}
           />
         </div>
 
         <div>
           <label className="label">מקסימום שעות אקדמיות ביום</label>
-          <input
-            type="number"
-            className="input"
+          <NumberInput
             value={settings.maxHoursPerDay}
             min={1}
             max={24}
             step={0.5}
-            onChange={(e) =>
-              set({ maxHoursPerDay: parseFloat(e.target.value) || 8 })
-            }
+            onChange={(v) => set({ maxHoursPerDay: v })}
           />
         </div>
       </div>
