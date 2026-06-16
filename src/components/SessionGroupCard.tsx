@@ -59,19 +59,8 @@ export function SessionGroupCard({ group, index, settings, onChange, onRemove }:
         </button>
       </div>
 
-      {/* Inputs */}
+      {/* Inputs — on mobile: row1=times, row2=counts; on desktop: all 4 in one row */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div>
-          <label className="label">מספר מפגשים</label>
-          <input
-            type="number"
-            className="input bg-white"
-            value={group.count}
-            min={1}
-            onChange={(e) => onChange({ ...group, count: parseInt(e.target.value, 10) || 1 })}
-          />
-        </div>
-
         <div>
           <label className="label">שעת התחלה</label>
           <input
@@ -93,10 +82,18 @@ export function SessionGroupCard({ group, index, settings, onChange, onRemove }:
         </div>
 
         <div>
-          <label className="label">
-            שעות אקדמיות
-            <span className="text-gray-400 font-normal normal-case mr-1">(מקס׳ {settings.maxHoursPerDay})</span>
-          </label>
+          <label className="label">מספר מפגשים</label>
+          <input
+            type="number"
+            className="input bg-white"
+            value={group.count}
+            min={1}
+            onChange={(e) => onChange({ ...group, count: parseInt(e.target.value, 10) || 1 })}
+          />
+        </div>
+
+        <div>
+          <label className="label">שעות אקדמיות</label>
           <input
             type="number"
             className={`input bg-white font-semibold ${
@@ -107,6 +104,7 @@ export function SessionGroupCard({ group, index, settings, onChange, onRemove }:
             step={0.5}
             onChange={(e) => onChange({ ...group, hoursPerSession: parseFloat(e.target.value) || 0 })}
           />
+          <p className="text-xs text-gray-400 mt-1">מקס׳ {settings.maxHoursPerDay} ביום</p>
         </div>
       </div>
 
