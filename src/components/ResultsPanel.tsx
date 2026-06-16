@@ -45,30 +45,30 @@ export function ResultsPanel({ results, settings }: Props) {
             יעד: <span className="font-semibold text-bb-green">{formatHours(settings.totalHours)}</span> שעות
           </span>
         </div>
-        <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+        <div className={`h-3 rounded-full overflow-hidden ${isOver || (!isComplete && sessionResults.length > 0) ? 'bg-red-100' : 'bg-gray-100'}`}>
           <div
             className={`h-full rounded-full transition-all duration-500 ${
               isOver
                 ? 'bg-red-500'
                 : isComplete
                 ? 'bg-bb-green'
-                : progressPct > 80
-                ? 'bg-bb-sky'
-                : 'bg-bb-green'
+                : 'bg-amber-400'
             }`}
             style={{ width: `${progressPct}%` }}
           />
         </div>
-        <div className="flex justify-between text-xs mt-1">
-          <span className="text-gray-400">{progressPct.toFixed(1)}%</span>
+        <div className="flex justify-between items-center mt-1.5">
+          <span className="text-xs text-gray-400">{progressPct.toFixed(1)}%</span>
           {isOver ? (
-            <span className="text-red-500 font-semibold">
-              חריגה של {formatHours(Math.abs(remainingHours))} שעות!
+            <span className="text-xs bg-red-100 text-red-600 font-bold px-2 py-0.5 rounded-full border border-red-200">
+              ⚠ חריגה של {formatHours(Math.abs(remainingHours))} שעות
             </span>
           ) : isComplete ? (
-            <span className="text-bb-green font-semibold">✓ כל השעות מתוכננות</span>
+            <span className="text-xs bg-bb-green text-white font-bold px-2 py-0.5 rounded-full">
+              ✓ הושלם
+            </span>
           ) : (
-            <span className="text-bb-green font-medium">
+            <span className="text-xs bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full border border-amber-300">
               נותרו {formatHours(remainingHours)} שעות
             </span>
           )}
