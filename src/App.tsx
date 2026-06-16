@@ -65,7 +65,7 @@ export default function App() {
   const results = calculateResults(settings, sessions);
 
   return (
-    <div dir="rtl" className="min-h-screen bg-bb-bg">
+    <div dir="rtl" className="min-h-screen bg-bb-bg overflow-x-hidden">
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4 pb-20">
         <Header onReset={reset} />
         <CourseSettingsCard settings={settings} onChange={setSettings} />

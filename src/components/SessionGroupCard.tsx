@@ -46,7 +46,7 @@ export function SessionGroupCard({ group, index, settings, onChange, onRemove }:
           </span>
           <input
             type="text"
-            className="input bg-white text-sm font-medium max-w-52"
+            className="input bg-white text-sm font-medium"
             placeholder="תיאור (אופציונלי)"
             value={group.label}
             onChange={(e) => onChange({ ...group, label: e.target.value })}
@@ -130,11 +130,11 @@ export function SessionGroupCard({ group, index, settings, onChange, onRemove }:
           </div>
 
           {isValid && (
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-gray-500 min-w-0">
               {group.startTime}–{group.endTime}
-              <span className="text-gray-300 mx-2">·</span>
-              <span className="font-bold text-gray-800">
-                סה״כ: {(group.hoursPerSession * group.count).toFixed(2)} שעות
+              <span className="text-gray-300 mx-1.5">·</span>
+              <span className="font-bold text-gray-800 whitespace-nowrap">
+                סה״כ: {(group.hoursPerSession * group.count).toFixed(2)} שע׳
               </span>
             </span>
           )}

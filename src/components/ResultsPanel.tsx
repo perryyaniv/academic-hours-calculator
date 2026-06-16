@@ -77,42 +77,48 @@ export function ResultsPanel({ results, settings }: Props) {
 
       {/* Table */}
       {sessionResults.length > 0 && (
-        <div className="overflow-x-auto -mx-5 px-5">
+        <div className="w-full">
           <table className="w-full text-sm border-collapse">
             <thead>
               <tr className="bg-bb-green/5 border-b-2 border-bb-green/20">
                 <th className="text-right py-2 px-2 font-semibold text-bb-green">קבוצה</th>
-                <th className="text-center py-2 px-2 font-semibold text-bb-green w-20">מפגשים</th>
-                <th className="text-center py-2 px-2 font-semibold text-bb-green w-28">שע׳/מפגש</th>
-                <th className="text-center py-2 px-2 font-semibold text-bb-green w-24">שעות</th>
-                <th className="text-center py-2 px-2 font-semibold text-bb-green w-20">הפסקה</th>
-                <th className="text-center py-2 px-2 font-semibold text-bb-green w-20">עד</th>
+                <th className="hidden sm:table-cell text-center py-2 px-2 font-semibold text-bb-green">מפגשים</th>
+                <th className="hidden sm:table-cell text-center py-2 px-2 font-semibold text-bb-green">שע׳/מפגש</th>
+                <th className="text-center py-2 px-2 font-semibold text-bb-green">שעות</th>
+                <th className="hidden sm:table-cell text-center py-2 px-2 font-semibold text-bb-green">הפסקה</th>
+                <th className="text-center py-2 px-2 font-semibold text-bb-green">עד</th>
               </tr>
             </thead>
             <tbody>
               {sessionResults.map((r, i) => (
                 <tr
                   key={r.group.id}
-                  className={`border-b border-gray-100 hover:bg-gray-50/50 transition-colors ${
-                    !r.isValid ? 'opacity-40' : ''
-                  }`}
+                  className={`border-b border-gray-100 ${!r.isValid ? 'opacity-40' : ''}`}
                 >
                   <td className="py-2 px-2">
-                    <span className="inline-flex items-center justify-center bg-bb-green text-white text-xs font-bold rounded-full w-5 h-5 ml-1.5">
-                      {i + 1}
-                    </span>
-                    <span className="text-gray-800">
-                      {r.group.label || `${r.group.startTime}–${r.group.endTime}`}
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="inline-flex items-center justify-center bg-bb-green text-white text-xs font-bold rounded-full w-5 h-5 shrink-0">
+                        {i + 1}
+                      </span>
+                      <div className="min-w-0">
+                        <div className="text-gray-800 truncate">
+                          {r.group.label || `${r.group.startTime}–${r.group.endTime}`}
+                        </div>
+                        {/* Extra info visible on mobile only */}
+                        <div className="sm:hidden text-xs text-gray-400 mt-0.5">
+                          {r.group.count} מפגשים · {r.isValid ? formatHours(r.hoursPerSession) : '—'} שע׳
+                        </div>
+                      </div>
+                    </div>
                   </td>
-                  <td className="py-2 px-2 text-center text-gray-700">{r.group.count}</td>
-                  <td className="py-2 px-2 text-center font-mono font-medium text-bb-green">
+                  <td className="hidden sm:table-cell py-2 px-2 text-center text-gray-700">{r.group.count}</td>
+                  <td className="hidden sm:table-cell py-2 px-2 text-center font-mono font-medium text-bb-green">
                     {r.isValid ? formatHours(r.hoursPerSession) : '—'}
                   </td>
                   <td className="py-2 px-2 text-center font-mono font-bold text-gray-900">
                     {r.isValid ? formatHours(r.totalHours) : '—'}
                   </td>
-                  <td className="py-2 px-2 text-center text-gray-400 text-xs">
+                  <td className="hidden sm:table-cell py-2 px-2 text-center text-gray-400 text-xs">
                     {r.isValid ? (r.breakMinutes > 0 ? `${r.breakMinutes}′` : '—') : '—'}
                   </td>
                   <td className="py-2 px-2 text-center text-gray-400 text-xs font-mono">
@@ -121,11 +127,33 @@ export function ResultsPanel({ results, settings }: Props) {
                 </tr>
               ))}
             </tbody>
-            <tfoot>
+            {/* Mobile tfoot — 3 visible columns */}
+            <tfoot className="sm:hidden">
               <tr className="bg-bb-green/5 border-t-2 border-bb-green/20">
-                <td className="py-2 px-2 font-bold text-gray-800" colSpan={3}>
-                  סה״כ מתוכנן
+                <td className="py-2 px-2 font-bold text-gray-800">סה״כ מתוכנן</td>
+                <td className="py-2 px-2 text-center font-mono font-bold text-lg text-gray-900">
+                  {formatHours(totalPlannedHours)}
                 </td>
+                <td />
+              </tr>
+              {!isComplete && (
+                <tr>
+                  <td className="py-1.5 px-2 font-semibold">
+                    <span className={isOver ? 'text-red-600' : 'text-bb-green'}>
+                      {isOver ? 'חריגה' : 'נותרו'}
+                    </span>
+                  </td>
+                  <td className={`py-1.5 px-2 text-center font-mono font-bold text-lg ${isOver ? 'text-red-600' : 'text-bb-green'}`}>
+                    {isOver ? '+' : ''}{formatHours(Math.abs(remainingHours))}
+                  </td>
+                  <td />
+                </tr>
+              )}
+            </tfoot>
+            {/* Desktop tfoot — 6 visible columns */}
+            <tfoot className="hidden sm:table-footer-group">
+              <tr className="bg-bb-green/5 border-t-2 border-bb-green/20">
+                <td className="py-2 px-2 font-bold text-gray-800" colSpan={3}>סה״כ מתוכנן</td>
                 <td className="py-2 px-2 text-center font-mono font-bold text-lg text-gray-900">
                   {formatHours(totalPlannedHours)}
                 </td>
@@ -138,11 +166,7 @@ export function ResultsPanel({ results, settings }: Props) {
                       {isOver ? 'חריגה' : 'נותרו'}
                     </span>
                   </td>
-                  <td
-                    className={`py-1.5 px-2 text-center font-mono font-bold text-lg ${
-                      isOver ? 'text-red-600' : 'text-bb-green'
-                    }`}
-                  >
+                  <td className={`py-1.5 px-2 text-center font-mono font-bold text-lg ${isOver ? 'text-red-600' : 'text-bb-green'}`}>
                     {isOver ? '+' : ''}{formatHours(Math.abs(remainingHours))}
                   </td>
                   <td /><td />
