@@ -1,5 +1,3 @@
-import { BeitBerlLogo } from './BeitBerlLogo';
-
 interface Props {
   onReset: () => void;
   onShare: () => void;
