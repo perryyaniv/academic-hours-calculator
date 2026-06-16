@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { CourseSettings, SessionGroup } from './types';
-// SessionGroup imported for addSession default
 import { calculateResults } from './utils/calculations';
+import { buildShareUrl, loadFromUrl } from './utils/share';
 import { Header } from './components/Header';
 import { CourseSettingsCard } from './components/CourseSettingsCard';
 import { SessionsList } from './components/SessionsList';
@@ -13,7 +13,6 @@ const DEFAULT_SETTINGS: CourseSettings = {
   maxHoursPerDay: 8,
 };
 
-
 function loadFromStorage<T>(key: string, fallback: T): T {
   try {
     const raw = localStorage.getItem(key);
@@ -24,12 +23,17 @@ function loadFromStorage<T>(key: string, fallback: T): T {
 }
 
 export default function App() {
-  const [settings, setSettings] = useState<CourseSettings>(() =>
-    loadFromStorage('ahc-settings', DEFAULT_SETTINGS),
-  );
-  const [sessions, setSessions] = useState<SessionGroup[]>(() =>
-    loadFromStorage('ahc-sessions', []),
-  );
+  const [settings, setSettings] = useState<CourseSettings>(() => {
+    const shared = loadFromUrl();
+    return shared?.settings ?? loadFromStorage('ahc-settings', DEFAULT_SETTINGS);
+  });
+
+  const [sessions, setSessions] = useState<SessionGroup[]>(() => {
+    const shared = loadFromUrl();
+    return shared?.sessions ?? loadFromStorage('ahc-sessions', []);
+  });
+
+  const [copyFeedback, setCopyFeedback] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('ahc-settings', JSON.stringify(settings));
@@ -62,12 +66,19 @@ export default function App() {
     setSessions([]);
   };
 
+  const handleShare = async () => {
+    const url = buildShareUrl(settings, sessions);
+    await navigator.clipboard.writeText(url);
+    setCopyFeedback(true);
+    setTimeout(() => setCopyFeedback(false), 2500);
+  };
+
   const results = calculateResults(settings, sessions);
 
   return (
     <div dir="rtl" className="min-h-screen bg-bb-bg overflow-x-hidden">
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4 pb-20">
-        <Header onReset={reset} />
+        <Header onReset={reset} onShare={handleShare} copyFeedback={copyFeedback} />
         <CourseSettingsCard settings={settings} onChange={setSettings} />
         <SessionsList
           sessions={sessions}
