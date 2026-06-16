@@ -83,7 +83,7 @@ export default function App() {
 
       <footer className="fixed bottom-0 left-0 right-0 bg-bb-green/95 backdrop-blur text-center text-xs text-white/60 py-2 px-4">
         <span className="text-white/80 font-medium">המכללה האקדמית בית ברל</span>
-        {' '}· מחשבון שעות אקדמיות · נתונים נשמרים מקומית בדפדפן
+        {' '}· מחשבון שעות אקדמיות
       </footer>
     </div>
   );
