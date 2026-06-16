@@ -48,7 +48,7 @@ export function CourseSettingsCard({ settings, onChange }: Props) {
         </div>
 
         <div>
-          <label className="label">מקסימום שעות ביום</label>
+          <label className="label">מקסימום שעות אקדמיות ביום</label>
           <input
             type="number"
             className="input"
